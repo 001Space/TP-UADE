@@ -24,32 +24,19 @@ def menu():
                 print("Opción no válida, intente de nuevo.")
         else:
             print(f"\n--- Menú principal (Usuario actual: {usuario_actual}) ---")
-            print("1. Registrar usuario")
-            print("2. Eliminar usuario")
-            print("3. Mostrar usuarios registrados")
+            print("1. Mostrar usuarios registrados")
+            print("2. Buscar productos")
+            print("3. Cargar venta")
+            
             if usuario_actual == administrador["nombre"]:
-                print("4. Modificar credenciales del administrador")
-            print("5. Cerrar sesión")
-            print("6. Salir")
+                print("4. Modificar datos del administrador")
+                print("5. Agregar/Modificar datos de productos")
+                print("6. Registrar/modificar usuarios")
+                
+            print("7. Cerrar sesión")
 
-            opcion = input("Seleccione una opción (1-6): ")
+            opcion = input("Seleccione una opción (1-7): ")
 
-            if opcion == "1":
-                registrar_usuario(usuario_actual)
-            elif opcion == "2":
-                eliminar_usuario(usuario_actual)
-            elif opcion == "3":
-                mostrar_usuarios(usuario_actual)
-            elif opcion == "4" and usuario_actual == administrador["nombre"]:
-                modificar_admin()
-            elif opcion == "5":
-                usuario_actual = None
-                print("Sesión cerrada.")
-            elif opcion == "6":
-                print("Saliendo del programa.")
-                break
-            else:
-                print("Opción no válida, intente de nuevo.")
 
 # Ejecutar el menú
 menu()

@@ -4,7 +4,27 @@
 #Vendedores, sumar restar stock, carrito de compras, ejecutar carrito (suma de costo, resta de stock)
 #Comision vendedores
 
+#Definimos admin    
+
+usuarios={}
+
+administrador = {"nombre": "admin", "contrasena": "admin123"}
+usuarios[administrador["nombre"]] = administrador["contrasena"]
+
+def iniciar_sesion():
+    nombre_usuario = input("Ingrese su nombre de usuario: ")
+    contrasena = input("Ingrese su contraseña: ")
+
+    if nombre_usuario in usuarios and usuarios[nombre_usuario] == contrasena:
+        print(f"Inicio de sesión exitoso. Bienvenido, {nombre_usuario}.")
+        return nombre_usuario
+    else:
+        print("Nombre de usuario o contraseña incorrectos.")
+        return None
+
+
 # Menú principal
+
 def menu():
     usuario_actual = None
 
@@ -36,6 +56,7 @@ def menu():
             print("7. Cerrar sesión")
 
             opcion = input("Seleccione una opción (1-7): ")
+
 
 
 # Ejecutar el menú

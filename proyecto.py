@@ -40,3 +40,15 @@ def menu():
 
 # Ejecutar el menú
 menu()
+
+#Generar guardado de datos, asi mantenemos las listas una vez ingresadas
+
+def baseDeDatos():
+    pass
+
+#Otra lista para usuarios guardados o modificarlos
+
+def baseDeDatosUsuarios():
+    pass
+
+

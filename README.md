@@ -1,6 +1,6 @@
 # TP-UADE
 tp de programacion 1
-istema de Gestión de Tienda
+Sistema de Gestión de Tienda
 
 Este es un sistema de gestión de tienda escrito en Python, diseñado para administrar productos, gestionar stock en varias sucursales, realizar ventas y calcular comisiones para los vendedores. Incluye un sistema de login para usuarios y administradores, así como un buscador de mercadería.
 

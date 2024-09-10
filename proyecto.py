@@ -1,13 +1,4 @@
-#Hacer un login usurarios/administradores
-#Buscador de mercaderia
-#Dentro del administrador, modificar y agregar productos, stock, stock en sucursarles
-#Vendedores, sumar restar stock, carrito de compras, ejecutar carrito (suma de costo, resta de stock)
-#Comision vendedores
-
-#Definimos admin    
-
 usuarios={}
-
 administrador = {"nombre": "admin", "contrasena": "admin123"}
 usuarios[administrador["nombre"]] = administrador["contrasena"]
 
@@ -62,14 +53,39 @@ def menu():
 # Ejecutar el menú
 menu()
 
-#Generar guardado de datos, asi mantenemos las listas una vez ingresadas
 
-def baseDeDatos():
+def Registrar_usuario():
     pass
 
-#Otra lista para usuarios guardados o modificarlos
-
-def baseDeDatosUsuarios():
+def Modificar_usuario():
     pass
+    
+def Registrar_producto():
+    pass
+    
+def Modificar_producto():
+    pass
+
+def Factura():
+    pass
+    
+def Cierre_contable():
+    pass
+
+def Buscador_usuarios():
+    pass
+
+def Buscador_productos():
+    pass
+
+def Modificacion_pago():
+    pass
+
+def datos_usuario():
+    pass
+    
+#funciones lambda para descuentos y recargos en la factura
+descuento = lambda x, y: x * y
+recargo = lambda x, z: x * z
 
 

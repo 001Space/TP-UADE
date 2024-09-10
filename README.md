@@ -26,3 +26,5 @@ Funcionalidades
 5. Comisión de Vendedores
 - Cálculo Automático de Comisiones: El sistema calculará automáticamente las comisiones de los vendedores en base a las ventas realizadas.
 
+- https://docs.google.com/spreadsheets/d/1WvIz039iTdWpg0CaJ-_G4Pk0JZzzyXP89nxTIY-uhBE/edit?usp=sharing
+

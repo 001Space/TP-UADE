@@ -1,25 +1,25 @@
-ids = [1, 2, 3, 4, 5]
-nombres = ["Manzana", "Leche", "Pan", "Arroz", "Queso"]
-categorias = ["Frutas", "Lácteos", "Panadería", "Cereales", "Lácteos"]
-precios = [1030, 500, 1500, 2000, 2900]
+productos = {
+    1: {"nombre": "Manzana", "categoria": "Frutas", "precio": 1030},
+    2: {"nombre": "Leche", "categoria": "Lácteos", "precio": 500},
+    3: {"nombre": "Pan", "categoria": "Panadería", "precio": 1500},
+    4: {"nombre": "Arroz", "categoria": "Cereales", "precio": 2000},
+    5: {"nombre": "Queso", "categoria": "Lácteos", "precio": 2900}
+}
 
-def buscar_producto(termino, nombres):
-    indices_resultados = []
-    for i, nombre in enumerate(nombres):
-        if termino.lower() in nombre.lower():
-            indices_resultados.append(i)
-    return indices_resultados
+def buscarproducto(termino):
+    for idproducto, detalles in productos.items():
+        if termino.lower() in detalles["nombre"].lower():
+            return idproducto
+    return None
 
 def main():
     termino_busqueda = input("Ingrese el nombre del producto que desea buscar: ")
-    indices_resultados = buscar_producto(termino_busqueda, nombres)
+    idresultado = buscarproducto(termino_busqueda)
 
-    if indices_resultados:
-        print("\nProductos encontrados:")
-        for i in indices_resultados:
-            print(f"ID: {ids[i]}, Nombre: {nombres[i]}, Categoría: {categorias[i]}, Precio: ${precios[i]:.2f}")
+    if idresultado:
+        detalles = productos[idresultado]
+        print(f"ID: {idresultado}, Nombre: {detalles['nombre']}, Categoría: {detalles['categoria']}, Precio: ${detalles['precio']:.2f}")
     else:
         print("No se encontraron productos que coincidan con su búsqueda.")
 
-if __name__ == "__main__":
-    main()
+main()

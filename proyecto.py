@@ -1,9 +1,7 @@
-usuarios={}
+usuarios = {}
 administrador = {"nombre": "admin", "contrasena": "admin123"}
 usuarios[administrador["nombre"]] = administrador["contrasena"]
-producto={}
-
-
+productos = []  
 
 
 def iniciar_sesion():
@@ -19,7 +17,6 @@ def iniciar_sesion():
 
 
 # Menú principal
-
 def menu():
     usuario_actual = None
 
@@ -52,75 +49,64 @@ def menu():
 
             opcion = input("Seleccione una opción (1-7): ")
 
-            Registrar_producto()
+            if opcion == "1":
+                mostrar_usuarios()
+            elif opcion == "2":
+                nombre_producto = input("Ingrese el nombre del producto a buscar: ")
+                buscadorProductos(productos, nombre_producto)
+            elif opcion == "3":
+                pass
+            elif opcion == "4" and usuario_actual == administrador["nombre"]:
+                pass
+            elif opcion == "5" and usuario_actual == administrador["nombre"]:
+                Registrar_producto(productos)
+            elif opcion == "6" and usuario_actual == administrador["nombre"]:
+                pass
+            elif opcion == "7":
+                usuario_actual = None
+                print("Sesión cerrada.")
+            else:
+                print("Opción no válida.")
 
-            
 
-          
+def mostrar_usuarios():
+    print("\n--- Usuarios registrados ---")
+    for usuario, contrasena in usuarios.items():
+        print(f"Usuario: {usuario}")
 
 
-
-def Registrar_usuario():
-    pass
-
-def Modificar_usuario():
-    pass
+def Registrar_producto(productos):
+    nombre = input("Ingrese el nombre del producto: ")
+    precio = float(input("Ingrese el precio del producto: "))
+    cantidad = int(input("Ingrese la cantidad del producto: "))
+    codigo = input("Ingrese el código del producto: ")
     
-def Registrar_producto(producto):
-    nombre=""
-    precio=0.0
-    cantidad=0
-    codigo=""
-    input(nombre("Ingrese el nombre del producto:"))
-    input(precio("Ingrese el precio del producto:"))
-    input(cantidad("Ingrese la cantidad del producto:"))
-    input(codigo("Ingrese el codigo del producto:"))
-    producto["nombreProducto"]=nombre
-    producto["precio"]=precio
-    producto["cantidadStock"]=cantidad
-    producto["ID"]=codigo
-
+    nuevo_producto = {
+        "nombreProducto": nombre,
+        "precio": precio,
+        "cantidadStock": cantidad,
+        "ID": codigo
+    }
     
+    productos.append(nuevo_producto)
+    print(f"Producto {nombre} registrado correctamente.")
 
-    
-def Modificar_producto(productos, producto, precioNuevo, cantNueva):
-    
-    nombre=nombre.upper()
-    for producto in productos:
-        if producto["nombreProducto"]==nombre:
-            producto["precio"]=precioNuevo
-            producto["cantidadStock"]=cantNueva
-            
-
-def Factura():
-    pass
-    
-def cierreContable():
-    pass
-
-def buscadorUsuarios():
-    pass
 
 def buscadorProductos(productos, nombre):
+    nombre = nombre.upper()
+    encontrado = False
+
+    for producto in productos:
+        if producto["nombreProducto"].upper() == nombre:
+            print(f"Producto encontrado: {producto}")
+            encontrado = True
     
-  nombre=nombre.upper()
+    if not encontrado:
+        print(f"Producto {nombre} no encontrado.")
 
-  for producto in productos:
-      if producto["nombreProducto"]==nombre:
-          print(producto)
-
-
-def Modificacion_pago():
-    pass
-
-def datos_usuario():
-    pass
-    
 #funciones lambda para descuentos y recargos en la factura
 descuento = lambda x, y: x * y
 recargo = lambda x, z: x * z
 
-
-        
-# Ejecutar el menú
+# Ejecutar el menú
 menu()

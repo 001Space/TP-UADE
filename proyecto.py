@@ -1,8 +1,7 @@
 usuarios = {}
 administrador = {"nombre": "admin", "contrasena": "admin123"}
 usuarios[administrador["nombre"]] = administrador["contrasena"]
-productos = []  
-
+productos = [] 
 
 def iniciar_sesion():
     nombre_usuario = input("Ingrese su nombre de usuario: ")
@@ -14,7 +13,6 @@ def iniciar_sesion():
     else:
         print("Nombre de usuario o contraseña incorrectos.")
         return None
-
 
 # Menú principal
 def menu():
@@ -56,24 +54,32 @@ def menu():
                 buscadorProductos(productos, nombre_producto)
             elif opcion == "3":
                 pass
-            elif opcion == "4" and usuario_actual == administrador["nombre"]:
+            elif opcion == "4" and usuario_actual == administrador["nombre"] :
                 pass
             elif opcion == "5" and usuario_actual == administrador["nombre"]:
                 Registrar_producto(productos)
             elif opcion == "6" and usuario_actual == administrador["nombre"]:
-                pass
+                registrarusuario()
             elif opcion == "7":
                 usuario_actual = None
                 print("Sesión cerrada.")
             else:
                 print("Opción no válida.")
 
-
 def mostrar_usuarios():
     print("\n--- Usuarios registrados ---")
     for usuario, contrasena in usuarios.items():
         print(f"Usuario: {usuario}")
 
+def registrarusuario():
+    nombre = input("Ingrese el nombre del usuario: ")
+    contraseña = input("Ingrese una contraseña: ")
+
+    if nombre in usuarios:
+        print("El usuario ya existe.")
+    else:
+        usuarios[nombre] = contraseña
+        print("Usuario registrado con éxito.")
 
 def Registrar_producto(productos):
     nombre = input("Ingrese el nombre del producto: ")
@@ -91,7 +97,6 @@ def Registrar_producto(productos):
     productos.append(nuevo_producto)
     print(f"Producto {nombre} registrado correctamente.")
 
-
 def buscadorProductos(productos, nombre):
     nombre = nombre.upper()
     encontrado = False
@@ -104,7 +109,7 @@ def buscadorProductos(productos, nombre):
     if not encontrado:
         print(f"Producto {nombre} no encontrado.")
 
-#funciones lambda para descuentos y recargos en la factura
+# funciones lambda para descuentos y recargos en la factura
 descuento = lambda x, y: x * y
 recargo = lambda x, z: x * z
 

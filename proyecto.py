@@ -1,6 +1,10 @@
 usuarios={}
 administrador = {"nombre": "admin", "contrasena": "admin123"}
 usuarios[administrador["nombre"]] = administrador["contrasena"]
+producto={}
+
+
+
 
 def iniciar_sesion():
     nombre_usuario = input("Ingrese su nombre de usuario: ")
@@ -42,16 +46,18 @@ def menu():
             if usuario_actual == administrador["nombre"]:
                 print("4. Modificar datos del administrador")
                 print("5. Agregar/Modificar datos de productos")
-                print("6. Registrar/modificar usuarios")
+                print("6. Registrar/Modificar usuarios")
                 
             print("7. Cerrar sesión")
 
             opcion = input("Seleccione una opción (1-7): ")
 
+            Registrar_producto()
 
+            
 
-# Ejecutar el menú
-menu()
+          
+
 
 
 def Registrar_usuario():
@@ -60,23 +66,49 @@ def Registrar_usuario():
 def Modificar_usuario():
     pass
     
-def Registrar_producto():
-    pass
+def Registrar_producto(producto):
+    nombre=""
+    precio=0.0
+    cantidad=0
+    codigo=""
+    input(nombre("Ingrese el nombre del producto:"))
+    input(precio("Ingrese el precio del producto:"))
+    input(cantidad("Ingrese la cantidad del producto:"))
+    input(codigo("Ingrese el codigo del producto:"))
+    producto["nombreProducto"]=nombre
+    producto["precio"]=precio
+    producto["cantidadStock"]=cantidad
+    producto["ID"]=codigo
+
     
-def Modificar_producto():
-    pass
+
+    
+def Modificar_producto(productos, producto, precioNuevo, cantNueva):
+    
+    nombre=nombre.upper()
+    for producto in productos:
+        if producto["nombreProducto"]==nombre:
+            producto["precio"]=precioNuevo
+            producto["cantidadStock"]=cantNueva
+            
 
 def Factura():
     pass
     
-def Cierre_contable():
+def cierreContable():
     pass
 
-def Buscador_usuarios():
+def buscadorUsuarios():
     pass
 
-def Buscador_productos():
-    pass
+def buscadorProductos(productos, nombre):
+    
+  nombre=nombre.upper()
+
+  for producto in productos:
+      if producto["nombreProducto"]==nombre:
+          print(producto)
+
 
 def Modificacion_pago():
     pass
@@ -89,3 +121,6 @@ descuento = lambda x, y: x * y
 recargo = lambda x, z: x * z
 
 
+        
+# Ejecutar el menú
+menu()

@@ -1,7 +1,11 @@
-usuarios = {}
+usuarios = {
+    "admin": "admin123",
+    "juan": "juan123",
+}
+
 administrador = {"nombre": "admin", "contrasena": "admin123"}
-usuarios[administrador["nombre"]] = administrador["contrasena"]
-productos = [] 
+
+productos = []
 
 def iniciar_sesion():
     nombre_usuario = input("Ingrese su nombre de usuario: ")
@@ -54,7 +58,7 @@ def menu():
                 buscadorProductos(productos, nombre_producto)
             elif opcion == "3":
                 pass
-            elif opcion == "4" and usuario_actual == administrador["nombre"] :
+            elif opcion == "4" and usuario_actual == administrador["nombre"]:
                 pass
             elif opcion == "5" and usuario_actual == administrador["nombre"]:
                 Registrar_producto(productos)
@@ -68,7 +72,7 @@ def menu():
 
 def mostrar_usuarios():
     print("\n--- Usuarios registrados ---")
-    for usuario, contrasena in usuarios.items():
+    for usuario in usuarios:
         print(f"Usuario: {usuario}")
 
 def registrarusuario():
@@ -102,16 +106,12 @@ def buscadorProductos(productos, nombre):
     encontrado = False
 
     for producto in productos:
-        if producto["nombreProducto"].upper() == nombre:
+        if nombre in producto["nombreProducto"].upper():
             print(f"Producto encontrado: {producto}")
             encontrado = True
     
     if not encontrado:
         print(f"Producto {nombre} no encontrado.")
-
-# funciones lambda para descuentos y recargos en la factura
-descuento = lambda x, y: x * y
-recargo = lambda x, z: x * z
 
 # Ejecutar el menú
 menu()

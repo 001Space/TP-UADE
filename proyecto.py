@@ -1,12 +1,15 @@
+#Trabajo practico GRUPO 8
+
+
+#Variables externas
 usuarios = {
     "admin": "admin123",
     "juan": "juan123",
 }
-
 administrador = {"nombre": "admin", "contrasena": "admin123"}
-
 productos = []
 
+#Inicio de sesion, verifica usuarios
 def iniciar_sesion():
     nombre_usuario = input("Ingrese su nombre de usuario: ")
     contrasena = input("Ingrese su contraseña: ")
@@ -21,6 +24,7 @@ def iniciar_sesion():
 # Menú principal
 def menu():
     usuario_actual = None
+#While verifica que el usuario actual y la contraseña coinciden 
 
     while True:
         if usuario_actual is None:
@@ -41,7 +45,7 @@ def menu():
             print("1. Mostrar usuarios registrados")
             print("2. Buscar productos")
             print("3. Cargar venta")
-            
+#Si el usuario es el administrador podra ver mas opciones            
             if usuario_actual == administrador["nombre"]:
                 print("4. Modificar datos del administrador")
                 print("5. Agregar/Modificar datos de productos")
@@ -50,7 +54,7 @@ def menu():
             print("7. Cerrar sesión")
 
             opcion = input("Seleccione una opción (1-7): ")
-
+#Seleccion de opciones del menu
             if opcion == "1":
                 mostrar_usuarios()
             elif opcion == "2":
@@ -69,12 +73,12 @@ def menu():
                 print("Sesión cerrada.")
             else:
                 print("Opción no válida.")
-
+#Definimos mostrar usuarios
 def mostrar_usuarios():
     print("\n--- Usuarios registrados ---")
     for usuario in usuarios:
         print(f"Usuario: {usuario}")
-
+#Definimos como registrar usuarios
 def registrarusuario():
     nombre = input("Ingrese el nombre del usuario: ")
     contraseña = input("Ingrese una contraseña: ")
@@ -84,7 +88,7 @@ def registrarusuario():
     else:
         usuarios[nombre] = contraseña
         print("Usuario registrado con éxito.")
-
+#Definimos como registrar productos
 def Registrar_producto(productos):
     nombre = input("Ingrese el nombre del producto: ")
     precio = float(input("Ingrese el precio del producto: "))
@@ -100,7 +104,7 @@ def Registrar_producto(productos):
     
     productos.append(nuevo_producto)
     print(f"Producto {nombre} registrado correctamente.")
-
+#Definimos como buscar productos
 def buscadorProductos(productos, nombre):
     nombre = nombre.upper()
     encontrado = False
@@ -112,6 +116,26 @@ def buscadorProductos(productos, nombre):
     
     if not encontrado:
         print(f"Producto {nombre} no encontrado.")
+        
+#Funciones a desarrollar en la siguiente entrega
 
+def modificarProducto():
+    pass
+
+def modifcarUsuario():
+    pass
+
+def facturacion():
+    pass
+
+def modAdmin():
+    pass
+
+def modDescuentos():
+    pass
+
+#Funcion descuentos a desarrolar en lambda
+descuento = lambda x, y: x * y
+recargo = lambda x, z: x * z
 # Ejecutar el menú
 menu()

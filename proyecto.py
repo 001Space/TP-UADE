@@ -1,19 +1,18 @@
-#Trabajo practico GRUPO 8
+# Trabajo practico GRUPO 8
 
-
-#Variables externas
+# Variables externas
 usuarios = {
     "admin": "admin123",
     "juan": "juan123",
 }
 administrador = {"nombre": "admin", "contrasena": "admin123"}
-productos = []
+productos = []  #productos matriz (lista de listas)
 
-#Inicio de sesion, verifica usuarios
+# Inicio de sesion, verifica usuarios
 def iniciar_sesion():
     nombre_usuario = input("Ingrese su nombre de usuario: ")
     contrasena = input("Ingrese su contraseña: ")
-
+    #si el nombre ingresado esta en el diccionario y coincide con su key, inicia sesion
     if nombre_usuario in usuarios and usuarios[nombre_usuario] == contrasena:
         print(f"Inicio de sesión exitoso. Bienvenido, {nombre_usuario}.")
         return nombre_usuario
@@ -24,37 +23,36 @@ def iniciar_sesion():
 # Menú principal
 def menu():
     usuario_actual = None
-#While verifica que el usuario actual y la contraseña coinciden 
-
+    # While infinito para menu
     while True:
-        if usuario_actual is None:
+        if usuario_actual is None: # si no hay un usuario conectado muestra el menu de inicio
             print("\n--- Menú de inicio de sesión ---")
             print("1. Iniciar sesión")
             print("2. Salir")
             opcion = input("Seleccione una opción (1-2): ")
 
             if opcion == "1":
-                usuario_actual = iniciar_sesion()
+                usuario_actual = iniciar_sesion() # ejecuta iniciar secion y verifica usuario y contraseña
             elif opcion == "2":
                 print("Saliendo del programa.")
                 break
             else:
                 print("Opción no válida, intente de nuevo.")
-        else:
+        else: # si hay un usuario conectado te muestra el menu principal con las opciones para trabajar
             print(f"\n--- Menú principal (Usuario actual: {usuario_actual}) ---")
             print("1. Mostrar usuarios registrados")
             print("2. Buscar productos")
             print("3. Cargar venta")
-#Si el usuario es el administrador podra ver mas opciones            
+            # si el usuario es el administrador podrá ver más opciones
             if usuario_actual == administrador["nombre"]:
                 print("4. Modificar datos del administrador")
                 print("5. Agregar/Modificar datos de productos")
                 print("6. Registrar/Modificar usuarios")
-                
             print("7. Cerrar sesión")
 
             opcion = input("Seleccione una opción (1-7): ")
-#Seleccion de opciones del menu
+
+            # Selección de opciones del menú
             if opcion == "1":
                 mostrar_usuarios()
             elif opcion == "2":
@@ -73,12 +71,14 @@ def menu():
                 print("Sesión cerrada.")
             else:
                 print("Opción no válida.")
-#Definimos mostrar usuarios
+
+# Definimos mostrar usuarios
 def mostrar_usuarios():
     print("\n--- Usuarios registrados ---")
     for usuario in usuarios:
         print(f"Usuario: {usuario}")
-#Definimos como registrar usuarios
+
+# Definimos cómo registrar usuarios
 def registrarusuario():
     nombre = input("Ingrese el nombre del usuario: ")
     contraseña = input("Ingrese una contraseña: ")
@@ -88,37 +88,33 @@ def registrarusuario():
     else:
         usuarios[nombre] = contraseña
         print("Usuario registrado con éxito.")
-#Definimos como registrar productos
+
+# Definimos cómo registrar productos (matriz)
 def Registrar_producto(productos):
     nombre = input("Ingrese el nombre del producto: ")
     precio = float(input("Ingrese el precio del producto: "))
     cantidad = int(input("Ingrese la cantidad del producto: "))
     codigo = input("Ingrese el código del producto: ")
-    
-    nuevo_producto = {
-        "nombreProducto": nombre,
-        "precio": precio,
-        "cantidadStock": cantidad,
-        "ID": codigo
-    }
-    
-    productos.append(nuevo_producto)
+
+    nuevo_producto = [nombre, precio, cantidad, codigo]  # Almacenamos en una lista (fila)
+    productos.append(nuevo_producto)  # Agregamos la fila a la matriz
+
     print(f"Producto {nombre} registrado correctamente.")
-#Definimos como buscar productos
+
+# Definimos cómo buscar productos (matriz)
 def buscadorProductos(productos, nombre):
     nombre = nombre.upper()
     encontrado = False
 
     for producto in productos:
-        if nombre in producto["nombreProducto"].upper():
-            print(f"Producto encontrado: {producto}")
+        if nombre in producto[0].upper():  # Buscamos en el nombre del producto (columna 0)
+            print(f"Producto encontrado: Nombre: {producto[0]}, Precio: {producto[1]}, Cantidad: {producto[2]}, Código: {producto[3]}")
             encontrado = True
-    
+
     if not encontrado:
         print(f"Producto {nombre} no encontrado.")
-        
-#Funciones a desarrollar en la siguiente entrega
 
+# Funciones a desarrollar en la siguiente entrega
 def modificarProducto():
     pass
 
@@ -134,8 +130,9 @@ def modAdmin():
 def modDescuentos():
     pass
 
-#Funcion descuentos a desarrolar en lambda
+# Función descuentos a desarrollar en lambda
 descuento = lambda x, y: x * y
 recargo = lambda x, z: x * z
+
 # Ejecutar el menú
 menu()

@@ -1,18 +1,24 @@
 # Trabajo practico GRUPO 8
 
-# Variables externas
+# Variables, listas, diccionarios y matrices globales
 usuarios = {
     "admin": "admin123",
     "juan": "juan123",
 }
 administrador = {"nombre": "admin", "contrasena": "admin123"}
-productos = []  #productos matriz (lista de listas)
+
+#Productos es una matriz (lista de listas)
+productos = [
+    ["Manzana", 0.50, 100, "A001"],   # [nombre, precio, cantidad, código]
+    ["Banana", 0.30, 150, "A002"],
+    ["Naranja", 0.60, 200, "A003"]
+]
 
 # Inicio de sesion, verifica usuarios
 def iniciar_sesion():
     nombre_usuario = input("Ingrese su nombre de usuario: ")
     contrasena = input("Ingrese su contraseña: ")
-    #si el nombre ingresado esta en el diccionario y coincide con su key, inicia sesion
+
     if nombre_usuario in usuarios and usuarios[nombre_usuario] == contrasena:
         print(f"Inicio de sesión exitoso. Bienvenido, {nombre_usuario}.")
         return nombre_usuario
@@ -23,27 +29,27 @@ def iniciar_sesion():
 # Menú principal
 def menu():
     usuario_actual = None
-    # While infinito para menu
+    # While para menu
     while True:
-        if usuario_actual is None: # si no hay un usuario conectado muestra el menu de inicio
+        if usuario_actual is None:
             print("\n--- Menú de inicio de sesión ---")
             print("1. Iniciar sesión")
             print("2. Salir")
             opcion = input("Seleccione una opción (1-2): ")
 
             if opcion == "1":
-                usuario_actual = iniciar_sesion() # ejecuta iniciar secion y verifica usuario y contraseña
+                usuario_actual = iniciar_sesion()
             elif opcion == "2":
                 print("Saliendo del programa.")
                 break
             else:
                 print("Opción no válida, intente de nuevo.")
-        else: # si hay un usuario conectado te muestra el menu principal con las opciones para trabajar
+        else:
             print(f"\n--- Menú principal (Usuario actual: {usuario_actual}) ---")
             print("1. Mostrar usuarios registrados")
             print("2. Buscar productos")
             print("3. Cargar venta")
-            # si el usuario es el administrador podrá ver más opciones
+            # Si el usuario es el administrador podrá ver más opciones
             if usuario_actual == administrador["nombre"]:
                 print("4. Modificar datos del administrador")
                 print("5. Agregar/Modificar datos de productos")
@@ -56,8 +62,15 @@ def menu():
             if opcion == "1":
                 mostrar_usuarios()
             elif opcion == "2":
-                nombre_producto = input("Ingrese el nombre del producto a buscar: ")
-                buscadorProductos(productos, nombre_producto)
+                criterio_busqueda = input("¿Desea buscar por (1) Nombre o (2) Código?: ")
+                if criterio_busqueda == "1":
+                    nombre_producto = input("Ingrese el nombre del producto a buscar: ")
+                    buscadorProductos(productos, nombre_producto, "nombre")
+                elif criterio_busqueda == "2":
+                    codigo_producto = input("Ingrese el código del producto a buscar: ")
+                    buscadorProductos(productos, codigo_producto, "codigo")
+                else:
+                    print("Opción de búsqueda no válida.")
             elif opcion == "3":
                 pass
             elif opcion == "4" and usuario_actual == administrador["nombre"]:
@@ -101,18 +114,26 @@ def Registrar_producto(productos):
 
     print(f"Producto {nombre} registrado correctamente.")
 
-# Definimos cómo buscar productos (matriz)
-def buscadorProductos(productos, nombre):
-    nombre = nombre.upper()
+# Definimos cómo buscar productos por nombre o código (matriz)
+def buscadorProductos(productos, busqueda, criterio):
+    busqueda = busqueda.upper()
     encontrado = False
 
     for producto in productos:
-        if nombre in producto[0].upper():  # Buscamos en el nombre del producto (columna 0)
-            print(f"Producto encontrado: Nombre: {producto[0]}, Precio: {producto[1]}, Cantidad: {producto[2]}, Código: {producto[3]}")
-            encontrado = True
+        if criterio == "nombre":
+            if busqueda in producto[0].upper():  # Buscamos en el nombre del producto (columna 0)
+                print(f"Producto encontrado: Nombre: {producto[0]}, Precio: {producto[1]}, Cantidad: {producto[2]}, Código: {producto[3]}")
+                encontrado = True
+        elif criterio == "codigo":
+            if busqueda == producto[3].upper():  # Buscamos en el código del producto (columna 3)
+                print(f"Producto encontrado: Nombre: {producto[0]}, Precio: {producto[1]}, Cantidad: {producto[2]}, Código: {producto[3]}")
+                encontrado = True
 
     if not encontrado:
-        print(f"Producto {nombre} no encontrado.")
+        if criterio == "nombre":
+            print(f"Producto con nombre '{busqueda}' no encontrado.")
+        elif criterio == "codigo":
+            print(f"Producto con código '{busqueda}' no encontrado.")
 
 # Funciones a desarrollar en la siguiente entrega
 def modificarProducto():

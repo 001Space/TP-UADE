@@ -1,10 +1,11 @@
 # Trabajo practico GRUPO 8
 
 # Variables, listas, diccionarios y matrices globales
-usuarios = {
-    "admin": "admin123",
-    "juan": "juan123",
-}
+usuarios = [
+    ["Juan", "Juan123", 130],  # [Nombre, Contraseña, N°Legajo]
+    ["Pepe", "Pepe123", 140]
+]
+
 administrador = {"nombre": "admin", "contrasena": "admin123"}
 
 #Productos es una matriz (lista de listas)
@@ -19,12 +20,20 @@ def iniciar_sesion():
     nombre_usuario = input("Ingrese su nombre de usuario: ")
     contrasena = input("Ingrese su contraseña: ")
 
-    if nombre_usuario in usuarios and usuarios[nombre_usuario] == contrasena:
+    # Verificamos si es un usuario registrado
+    for usuario in usuarios:
+        if usuario[0] == nombre_usuario and usuario[1] == contrasena:
+            print(f"Inicio de sesión exitoso. Bienvenido, {nombre_usuario}.")
+            return nombre_usuario
+
+    # Verificamos si es el administrador
+    if nombre_usuario == administrador["nombre"] and contrasena == administrador["contrasena"]:
         print(f"Inicio de sesión exitoso. Bienvenido, {nombre_usuario}.")
         return nombre_usuario
-    else:
-        print("Nombre de usuario o contraseña incorrectos.")
-        return None
+
+    # Si no es un usuario o administrador válido
+    print("Nombre de usuario o contraseña incorrectos.")
+    return None
 
 # Menú principal
 def menu():
@@ -89,18 +98,24 @@ def menu():
 def mostrar_usuarios():
     print("\n--- Usuarios registrados ---")
     for usuario in usuarios:
-        print(f"Usuario: {usuario}")
+        print(f"Nombre: {usuario[0]}, N°Legajo: {usuario[2]}")
 
-# Definimos cómo registrar usuarios
+#Definimos registro de usuarios
 def registrarusuario():
     nombre = input("Ingrese el nombre del usuario: ")
     contraseña = input("Ingrese una contraseña: ")
+    legajo = int(input("Ingrese el número de legajo del usuario: "))
 
-    if nombre in usuarios:
-        print("El usuario ya existe.")
-    else:
-        usuarios[nombre] = contraseña
-        print("Usuario registrado con éxito.")
+    # Verificar si el usuario ya existe
+    for usuario in usuarios:
+        if usuario[0] == nombre:
+            print("El usuario ya existe.")
+            return
+
+    # Registrar nuevo usuario
+    nuevo_usuario = [nombre, contraseña, legajo]
+    usuarios.append(nuevo_usuario)
+    print("Usuario registrado con éxito.")
 
 # Definimos cómo registrar productos (matriz)
 def Registrar_producto(productos):

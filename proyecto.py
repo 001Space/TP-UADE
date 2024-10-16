@@ -242,6 +242,9 @@ def modificar_datos_administrador():
     
     guardar_datos_administrador(administrador)
 
+def Cargar_venta():
+    pass
+
 # Menú principal
 def menu():
     usuario_actual = None
@@ -264,8 +267,8 @@ def menu():
         else:
             console.print(Panel(f"[bold cyan]--- Menú principal (Usuario actual: {usuario_actual}) ---[/bold cyan]", expand=False))
             print("1. Mostrar usuarios registrados")
-            print("2. Buscar productos")
-            print("3. Mostrar todos los productos")
+            print("2. Productos")
+            print("3. Cargar venta")
 
             admin_datos = cargar_datos_administrador()
             if usuario_actual == admin_datos["nombre"]:
@@ -281,17 +284,21 @@ def menu():
                 if opcion == "1":
                     mostrar_usuarios()
                 elif opcion == "2":
-                    criterio_busqueda = input("¿Desea buscar por (1) Nombre o (2) Código?: ")
-                    if criterio_busqueda == "1":
-                        nombre_busqueda = input("Ingrese el nombre del producto a buscar: ")
-                        buscar_producto_por_nombre(nombre_busqueda)
-                    elif criterio_busqueda == "2":
-                        codigo_busqueda = input("Ingrese el código del producto a buscar: ")
-                        buscar_producto_por_codigo(codigo_busqueda)
+                    criterio = input("Seleccione: 1.Mostrar todos los productos 2.Buscar producto")
+                    if criterio== "1":
+                        mostrar_productos()
                     else:
-                        console.print("[bold red]Opción no válida.[/bold red]")
+                        criterio_busqueda = input("¿Desea buscar por (1) Nombre o (2) Código?: ")
+                        if criterio_busqueda == "1":
+                            nombre_busqueda = input("Ingrese el nombre del producto a buscar: ")
+                            buscar_producto_por_nombre(nombre_busqueda)
+                        elif criterio_busqueda == "2":
+                            codigo_busqueda = input("Ingrese el código del producto a buscar: ")
+                            buscar_producto_por_codigo(codigo_busqueda)
+                        else:
+                            console.print("[bold red]Opción no válida.[/bold red]")
                 elif opcion == "3":
-                    mostrar_productos()
+                    Cargar_venta()
                 elif opcion == "4":
                     modificar_datos_administrador()
                 elif opcion == "5":
@@ -309,13 +316,6 @@ def menu():
                     console.print("[bold green]Sesión cerrada.[/bold green]")
                 else:
                     console.print("[bold red]Opción no válida.[/bold red]")
-            else:
-                print("10. Cerrar sesión")
-                opcion = input("Seleccione una opción: ")
-
-                if opcion == "10":
-                    usuario_actual = None
-                    console.print("[bold green]Sesión cerrada.[/bold green]")
 
 # Inicializar y ejecutar el menú
 inicializar_administrador()

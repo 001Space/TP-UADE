@@ -26,7 +26,6 @@ def guardar_datos_administrador(administrador):
 
 # Inicializar el archivo del administrador si no existe
 def inicializar_administrador():
-    # Intentar cargar datos del administrador. Si falla, se creará el archivo con valores por defecto.
     administrador = cargar_datos_administrador()
     if administrador['nombre'] == 'admin' and administrador['contrasena'] == 'admin123':
         guardar_datos_administrador(administrador)
@@ -127,23 +126,14 @@ def mostrar_productos():
 
     console.print(tabla)
 
-# Función para buscar un producto por nombre
-def buscar_producto_por_nombre(nombre):
+# Función unificada para buscar un producto por nombre o código
+def buscar_producto(nombre_o_codigo):
     productos = cargar_productos()
+    
     for producto in productos:
-        if producto[0].lower() == nombre.lower():
-            console.print(f"[bold green]Producto encontrado: {producto[0]}, Precio: {producto[1]}, Cantidad: {producto[2]}, Código: {producto[3]}[/bold green]")
-            return
-    console.print("[bold red]Producto no encontrado.[/bold red]")
-
-# Función para buscar un producto por código
-def buscar_producto_por_codigo(codigo):
-    productos = cargar_productos()
-    for producto in productos:
-        if producto[3] == codigo:
-            console.print(f"[bold green]Producto encontrado: {producto[0]}, Precio: {producto[1]}, Cantidad: {producto[2]}, Código: {producto[3]}[/bold green]")
-            return
-    console.print("[bold red]Producto no encontrado.[/bold red]")
+        if producto[0].lower() == nombre_o_codigo.lower() or producto[3] == nombre_o_codigo:
+            # Retorna el producto completo como una lista [nombre, precio, cantidad, código]
+            return producto
 
 # Función para registrar un usuario
 def registrarusuario():
@@ -189,63 +179,135 @@ def registrar_producto():
     guardar_productos(productos)
     console.print(f"[bold green]Producto {nombre} registrado correctamente.[/bold green]")
 
+def modificar_producto():
+    productos = cargar_productos()  # Cargamos la lista de productos
+    nombre_o_codigo = input("Ingrese el nombre o código del producto a modificar: ")
+
+    producto = buscar_producto(nombre_o_codigo)  # Buscamos el producto por nombre o código
+
+    if producto:
+        # Encontramos el índice del producto en la lista de productos
+        index = productos.index(producto)
+        
+        nuevo_nombre = input("Ingrese el nuevo nombre (o presione Enter para no cambiar): ")
+        nuevo_precio = input("Ingrese el nuevo precio (o presione Enter para no cambiar): ")
+        nueva_cantidad = input("Ingrese la nueva cantidad (o presione Enter para no cambiar): ")
+
+        # Modificamos los datos si el usuario proporciona nuevos valores
+        if nuevo_nombre:
+            productos[index][0] = nuevo_nombre
+        if nuevo_precio:
+            try:
+                productos[index][1] = float(nuevo_precio)  # Intentamos convertir el nuevo precio a float
+            except ValueError:
+                console.print("[bold red]Precio inválido, no se modificó.[/bold red]")
+                return  # Salimos si el precio no es válido
+        if nueva_cantidad:
+            try:
+                productos[index][2] = int(nueva_cantidad)  # Intentamos convertir la nueva cantidad a int
+            except ValueError:
+                console.print("[bold red]Cantidad inválida, no se modificó.[/bold red]")
+                return  # Salimos si la cantidad no es válida
+
+        # Guardamos los cambios en el archivo
+        guardar_productos(productos)
+        console.print(f"[bold green]Producto '{nombre_o_codigo}' modificado correctamente.[/bold green]")
+    else:
+        console.print("[bold red]Producto no encontrado.[/bold red]")
+
+
+
 # Función para eliminar un producto
 def eliminar_producto():
     productos = cargar_productos()
-    codigo_producto = input("Ingrese el código del producto a eliminar: ")
+    nombre_o_codigo = input("Ingrese el nombre o código del producto a eliminar: ")
 
-    for producto in productos:
-        if producto[3] == codigo_producto:
-            productos.remove(producto)
-            guardar_productos(productos)
-            console.print(f"[bold green]Producto {codigo_producto} eliminado con éxito.[/bold green]")
-            return
+    producto = buscar_producto(nombre_o_codigo)
 
-    console.print("[bold red]Producto no encontrado.[/bold red]")
-
-# Función para modificar datos de un producto
-def modificar_producto():
-    productos = cargar_productos()
-    codigo_producto = input("Ingrese el código del producto a modificar: ")
-
-    for producto in productos:
-        if producto[3] == codigo_producto:
-            nuevo_nombre = input("Ingrese el nuevo nombre (o presione Enter para no cambiar): ")
-            nuevo_precio = input("Ingrese el nuevo precio (o presione Enter para no cambiar): ")
-            nueva_cantidad = input("Ingrese la nueva cantidad (o presione Enter para no cambiar): ")
-
-            if nuevo_nombre:
-                producto[0] = nuevo_nombre
-            if nuevo_precio:
-                producto[1] = float(nuevo_precio)
-            if nueva_cantidad:
-                producto[2] = int(nueva_cantidad)
-
-            guardar_productos(productos)
-            console.print(f"[bold green]Producto {codigo_producto} modificado correctamente.[/bold green]")
-            return
-
-    console.print("[bold red]Producto no encontrado.[/bold red]")
+    if producto:
+        productos.remove(producto)
+        guardar_productos(productos)
+        console.print(f"[bold green]Producto '{nombre_o_codigo}' eliminado con éxito.[/bold green]")
+    else:
+        console.print("[bold red]Producto no encontrado.[/bold red]")
 
 # Función para modificar datos del administrador
 def modificar_datos_administrador():
     administrador = cargar_datos_administrador()
     console.print(Panel("[bold cyan]--- Modificar Datos del Administrador ---[/bold cyan]", expand=False))
-    
-    nuevo_nombre = input(f"Ingrese el nuevo nombre (actual: {administrador['nombre']}): ")
-    nueva_contrasena = input("Ingrese la nueva contraseña: ")
+
+    nuevo_nombre = input("Ingrese el nuevo nombre (o presione Enter para no cambiar): ")
+    nuevo_contrasena = input("Ingrese la nueva contraseña (o presione Enter para no cambiar): ")
 
     if nuevo_nombre:
         administrador["nombre"] = nuevo_nombre
-    if nueva_contrasena:
-        administrador["contrasena"] = nueva_contrasena
-    
+    if nuevo_contrasena:
+        administrador["contrasena"] = nuevo_contrasena
+
     guardar_datos_administrador(administrador)
 
-def Cargar_venta():
-    pass
 
-# Menú principal
+multiplicar = lambda x, y: x * y
+
+# Función para cargar ventas 
+def cargar_venta():
+    fac = 0
+
+    console.print(Panel("[bold cyan]-- Factura Iniciada --[/bold cyan]", expand=False))
+    tabla = Table(title="Factura de venta")
+    tabla.add_column("Nombre", style="magenta", justify="center")
+    tabla.add_column("Cantidad", style="magenta", justify="center")
+    tabla.add_column("Precio Un.", style="magenta", justify="center")
+    tabla.add_column("Precio Total", style="magenta", justify="center")
+
+    total_factura = 0  # Variable para acumular el total
+
+    # Cargar los productos al inicio para poder actualizarlos
+    productos = cargar_productos()
+
+    # Crear un diccionario para almacenar las cantidades vendidas
+    cantidades_vendidas = {}
+
+    while fac != '-1':
+        nombre_o_codigo = input("Ingrese el nombre o codigo del producto a buscar: ")
+        producto = buscar_producto(nombre_o_codigo)
+
+        if producto:
+            cantidad = int(input("Ingrese la cantidad del producto: "))  # Convertir a entero
+            if cantidad > producto[2]:
+                console.print(f"[bold red]No hay suficiente stock para {producto[0]}.[/bold red]")
+                continue
+            precio_total = multiplicar(producto[1], cantidad)
+            total_factura += precio_total  # Sumar al total de la factura
+            tabla.add_row(producto[0], str(cantidad), f"{producto[1]:.2f}", f"{precio_total:.2f}")  # Formato de precios
+            console.print(tabla)  # Imprimir la tabla después de agregar cada producto
+            
+            # Actualizar el stock de producto en el diccionario de cantidades vendidas
+            if producto[3] in cantidades_vendidas:
+                cantidades_vendidas[producto[3]] += cantidad
+            else:
+                cantidades_vendidas[producto[3]] = cantidad
+        else:
+            console.print(f"[bold red]Producto no encontrado: {nombre_o_codigo}[/bold red]")
+        fac = input("Presione Enter si desea cargar más productos, ingrese -1 para cerrar la factura: ")
+
+
+# Agregar el total al final de la tabla
+    tabla.add_row("[bold yellow]Total[/bold yellow]", "", "", f"[bold green]{total_factura:.2f}[/bold green]")  
+    console.print(tabla)  # Imprimir la tabla final con el total
+
+# Actualizar las cantidades en el archivo CSV
+    for producto in productos:
+        if producto[3] in cantidades_vendidas:
+            producto[2] -= cantidades_vendidas[producto[3]]  # Descontar la cantidad vendida
+
+# Guardar las cantidades actualizadas en el archivo CSV
+    guardar_productos(productos)
+
+    console.print(Panel("[bold green]-- Factura finalizada --[/bold green]", expand=False))
+
+
+# Menú principal actualizado
 def menu():
     usuario_actual = None
     salir = False
@@ -278,44 +340,44 @@ def menu():
                 print("7. Eliminar un usuario")
                 print("8. Eliminar un producto")
                 print("9. Modificar un producto")
-                print("10. Cerrar sesión")
 
-                opcion = input("Seleccione una opción: ")
-                if opcion == "1":
-                    mostrar_usuarios()
-                elif opcion == "2":
-                    criterio = input("Seleccione: 1.Mostrar todos los productos 2.Buscar producto")
-                    if criterio== "1":
-                        mostrar_productos()
+            print("10. Cerrar sesión")
+
+            opcion = input("Seleccione una opción: ")
+            if opcion == "1":
+                mostrar_usuarios()
+            elif opcion == "2":
+                criterio = input("Seleccione: 1. Mostrar todos los productos 2. Buscar producto: ")
+                if criterio == "1":
+                    mostrar_productos()
+                elif criterio=="2":
+                    nombre_o_codigo = input("Ingrese el nombre o codigo del producto a buscar: ")
+                    producto = buscar_producto(nombre_o_codigo)
+                    if producto:
+                        console.print(f"[bold green]Producto encontrado: {producto[0]}, Precio: {producto[1]}, Cantidad: {producto[2]}, Código: {producto[3]}[/bold green]")
                     else:
-                        criterio_busqueda = input("¿Desea buscar por (1) Nombre o (2) Código?: ")
-                        if criterio_busqueda == "1":
-                            nombre_busqueda = input("Ingrese el nombre del producto a buscar: ")
-                            buscar_producto_por_nombre(nombre_busqueda)
-                        elif criterio_busqueda == "2":
-                            codigo_busqueda = input("Ingrese el código del producto a buscar: ")
-                            buscar_producto_por_codigo(codigo_busqueda)
-                        else:
-                            console.print("[bold red]Opción no válida.[/bold red]")
-                elif opcion == "3":
-                    Cargar_venta()
-                elif opcion == "4":
-                    modificar_datos_administrador()
-                elif opcion == "5":
-                    registrar_producto()
-                elif opcion == "6":
-                    registrarusuario()
-                elif opcion == "7":
-                    eliminar_usuario()
-                elif opcion == "8":
-                    eliminar_producto()
-                elif opcion == "9":
-                    modificar_producto()
-                elif opcion == "10":
-                    usuario_actual = None
-                    console.print("[bold green]Sesión cerrada.[/bold green]")
+                        console.print("[bold red]Producto no encontrado[/bold red]")
                 else:
-                    console.print("[bold red]Opción no válida.[/bold red]")
+                    console.print("[bold red] Valor ingresado invalido [bold red]")
+            elif opcion == "3":
+                cargar_venta()
+            elif opcion == "4" and usuario_actual == cargar_datos_administrador()["nombre"]:
+                modificar_datos_administrador()
+            elif opcion == "5" and usuario_actual == cargar_datos_administrador()["nombre"]:
+                registrar_producto()
+            elif opcion == "6" and usuario_actual == cargar_datos_administrador()["nombre"]:
+                registrarusuario()                
+            elif opcion == "7" and usuario_actual == cargar_datos_administrador()["nombre"]:
+                eliminar_usuario()
+            elif opcion == "8" and usuario_actual == cargar_datos_administrador()["nombre"]:
+                eliminar_producto()
+            elif opcion == "9" and usuario_actual == cargar_datos_administrador()["nombre"]:
+                modificar_producto()
+            elif opcion == "10":
+                usuario_actual = None
+                console.print("[bold green]Sesión cerrada.[/bold green]")
+            else:
+                console.print("[bold red]Opción no válida.[/bold red]")
 
 # Inicializar y ejecutar el menú
 inicializar_administrador()

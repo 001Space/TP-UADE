@@ -291,6 +291,21 @@ def cargar_venta():
             console.print(f"[bold red]Producto no encontrado: {nombre_o_codigo}[/bold red]")
         fac = input("Presione Enter si desea cargar más productos, ingrese -1 para cerrar la factura: ")
 
+    continuar = True
+
+    while continuar:
+        met_pago = input("Seleccione metodo de pago: 1.Credito - 2.Efectivo - 3.Debito \n")
+        
+        if met_pago == '1':
+            total_factura = multiplicar(total_factura, 1.1)
+            continuar = False
+        elif met_pago == '2':
+            total_factura = multiplicar(total_factura, 0.9)
+            continuar = False
+        elif met_pago == '3':
+            continuar = False
+        else:
+            print("Valor invalido")
 
 # Agregar el total al final de la tabla
     tabla.add_row("[bold yellow]Total[/bold yellow]", "", "", f"[bold green]{total_factura:.2f}[/bold green]")  

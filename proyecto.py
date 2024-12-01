@@ -3,57 +3,31 @@ from rich.panel import Panel
 from rich.console import Console
 from rich.table import Table
 
+#Imports relacionados a usuarios
+from usuario import cargar_usuarios
+from usuario import guardar_usuarios
+from usuario import mostrar_usuarios
+from usuario import registrarusuario
+from usuario import eliminar_usuario
+
+#Imports relacionados al administrador
+from administrador import cargar_datos_administrador
+from administrador import guardar_datos_administrador
+from administrador import inicializar_administrador
+from administrador import modificar_datos_administrador
+
+#Imports relacionados a los productos
+from producto import cargar_productos
+from producto import guardar_productos
+from producto import mostrar_productos
+from producto import buscar_producto
+from producto import registrar_producto
+from producto import modificar_producto
+from producto import eliminar_producto
+
 console = Console()
 
-# Función para cargar los datos del administrador desde el archivo CSV
-def cargar_datos_administrador():
-    try:
-        with open("administrador.csv", "r") as archivo:
-            nombre, contrasena = archivo.readline().strip().split(",")
-            return {"nombre": nombre, "contrasena": contrasena}
-    except FileNotFoundError:
-        console.print("[bold red]Archivo de administrador no encontrado, se cargarán valores por defecto.[/bold red]")
-        return {"nombre": "admin", "contrasena": "admin123"}  # Valores por defecto
-    except Exception as e:
-        console.print(f"[bold red]Error al leer el archivo del administrador: {str(e)}[/bold red]")
-        return {"nombre": "admin", "contrasena": "admin123"}
-
-# Función para guardar los datos del administrador en el archivo CSV
-def guardar_datos_administrador(administrador):
-    with open("administrador.csv", "w") as archivo:
-        archivo.write(f"{administrador['nombre']},{administrador['contrasena']}\n")
-    console.print(f"[bold green]Datos del administrador actualizados correctamente.[/bold green]")
-
-# Inicializar el archivo del administrador si no existe
-def inicializar_administrador():
-    administrador = cargar_datos_administrador()
-    if administrador['nombre'] == 'admin' and administrador['contrasena'] == 'admin123':
-        guardar_datos_administrador(administrador)
-        console.print("[bold green]Archivo del administrador creado con valores por defecto.[/bold green]")
-
-# Función para cargar usuarios desde el archivo CSV
-def cargar_usuarios():
-    usuarios = []
-    try:
-        with open("usuarios.csv", "rt") as archivo_usuarios:
-            for linea in archivo_usuarios:
-                campos = linea.strip().split(",")
-                if len(campos) == 3:
-                    nombre, contrasena, legajo = campos
-                    usuarios.append([nombre, contrasena, int(legajo)])
-                else:
-                    console.print(f"[bold red]Línea ignorada por formato incorrecto: {linea.strip()}[/bold red]")
-    except FileNotFoundError:
-        console.print("[bold red]Archivo de usuarios no encontrado.[/bold red]")
-    return usuarios
-
-# Función para guardar usuarios en el archivo CSV
-def guardar_usuarios(usuarios):
-    with open("usuarios.csv", "w") as archivo_usuarios:
-        for usuario in usuarios:
-            archivo_usuarios.write(f"{usuario[0]},{usuario[1]},{usuario[2]}\n")
-
-# Función para iniciar sesión
+#FUNCIONES PRINCIPALES
 def iniciar_sesion():
     console.print(Panel("[bold cyan]--- Iniciar Sesión ---[/bold cyan]", expand=False))
     nombre_usuario = input("Ingrese su nombre de usuario: ")
@@ -73,179 +47,6 @@ def iniciar_sesion():
 
     console.print("[bold red]Nombre de usuario o contraseña incorrectos.[/bold red]")
     return None
-
-# Función para mostrar todos los usuarios registrados
-def mostrar_usuarios():
-    usuarios = cargar_usuarios()
-    if not usuarios:
-        console.print("[bold red]No hay usuarios registrados.[/bold red]")
-        return
-
-    tabla = Table(title="Usuarios Registrados")
-    tabla.add_column("Nombre", style="cyan", justify="center")
-    tabla.add_column("Legajo", style="magenta", justify="center")
-
-    for usuario in usuarios:
-        tabla.add_row(usuario[0], str(usuario[2]))
-
-    console.print(tabla)
-
-# Función para cargar productos desde el archivo CSV
-def cargar_productos():
-    productos = []
-    try:
-        with open("productos.csv", "rt") as archivo_productos:
-            for linea in archivo_productos:
-                nombre, precio, cantidad, codigo = linea.strip().split(",")
-                productos.append([nombre, float(precio), int(cantidad), codigo])
-    except FileNotFoundError:
-        console.print("[bold red]Archivo de productos no encontrado.[/bold red]")
-    return productos
-
-# Función para guardar productos en el archivo CSV
-def guardar_productos(productos):
-    with open("productos.csv", "w") as archivo_productos:
-        for producto in productos:
-            archivo_productos.write(f"{producto[0]},{producto[1]},{producto[2]},{producto[3]}\n")
-
-# Función para mostrar todos los productos
-def mostrar_productos():
-    productos = cargar_productos()
-    if not productos:
-        console.print("[bold red]No hay productos disponibles.[/bold red]")
-        return
-
-    tabla = Table(title="Lista de Productos")
-    tabla.add_column("Nombre", style="cyan", justify="center")
-    tabla.add_column("Precio", style="magenta", justify="center")
-    tabla.add_column("Cantidad", style="green", justify="center")
-    tabla.add_column("Código", style="yellow", justify="center")
-
-    for producto in productos:
-        tabla.add_row(producto[0], str(producto[1]), str(producto[2]), producto[3])
-
-    console.print(tabla)
-
-# Función unificada para buscar un producto por nombre o código
-def buscar_producto(nombre_o_codigo):
-    productos = cargar_productos()
-    
-    for producto in productos:
-        if producto[0].lower() == nombre_o_codigo.lower() or producto[3] == nombre_o_codigo:
-            # Retorna el producto completo como una lista [nombre, precio, cantidad, código]
-            return producto
-
-# Función para registrar un usuario
-def registrarusuario():
-    usuarios = cargar_usuarios()
-    nombre = input("Ingrese el nombre del usuario: ")
-    contraseña = input("Ingrese una contraseña: ")
-    legajo = int(input("Ingrese el número de legajo del usuario: "))
-
-    for usuario in usuarios:
-        if usuario[0] == nombre:
-            console.print("[bold red]El usuario ya existe.[/bold red]")
-            return
-
-    nuevo_usuario = [nombre, contraseña, legajo]
-    usuarios.append(nuevo_usuario)
-    guardar_usuarios(usuarios)
-    console.print("[bold green]Usuario registrado con éxito.[/bold green]")
-
-# Función para eliminar un usuario
-def eliminar_usuario():
-    usuarios = cargar_usuarios()
-    nombre_usuario = input("Ingrese el nombre del usuario a eliminar: ")
-
-    for usuario in usuarios:
-        if usuario[0] == nombre_usuario:
-            usuarios.remove(usuario)
-            guardar_usuarios(usuarios)
-            console.print(f"[bold green]Usuario {nombre_usuario} eliminado con éxito.[/bold green]")
-            return
-
-    console.print("[bold red]Usuario no encontrado.[/bold red]")
-
-# Función para registrar un producto
-def registrar_producto():
-    productos = cargar_productos()
-    nombre = input("Ingrese el nombre del producto: ")
-    precio = float(input("Ingrese el precio del producto: "))
-    cantidad = int(input("Ingrese la cantidad del producto: "))
-    codigo = input("Ingrese el código del producto: ")
-
-    nuevo_producto = [nombre, precio, cantidad, codigo]
-    productos.append(nuevo_producto)
-    guardar_productos(productos)
-    console.print(f"[bold green]Producto {nombre} registrado correctamente.[/bold green]")
-
-def modificar_producto():
-    productos = cargar_productos()  # Cargamos la lista de productos
-    nombre_o_codigo = input("Ingrese el nombre o código del producto a modificar: ")
-
-    producto = buscar_producto(nombre_o_codigo)  # Buscamos el producto por nombre o código
-
-    if producto:
-        # Encontramos el índice del producto en la lista de productos
-        index = productos.index(producto)
-        
-        nuevo_nombre = input("Ingrese el nuevo nombre (o presione Enter para no cambiar): ")
-        nuevo_precio = input("Ingrese el nuevo precio (o presione Enter para no cambiar): ")
-        nueva_cantidad = input("Ingrese la nueva cantidad (o presione Enter para no cambiar): ")
-
-        # Modificamos los datos si el usuario proporciona nuevos valores
-        if nuevo_nombre:
-            productos[index][0] = nuevo_nombre
-        if nuevo_precio:
-            try:
-                productos[index][1] = float(nuevo_precio)  # Intentamos convertir el nuevo precio a float
-            except ValueError:
-                console.print("[bold red]Precio inválido, no se modificó.[/bold red]")
-                return  # Salimos si el precio no es válido
-        if nueva_cantidad:
-            try:
-                productos[index][2] = int(nueva_cantidad)  # Intentamos convertir la nueva cantidad a int
-            except ValueError:
-                console.print("[bold red]Cantidad inválida, no se modificó.[/bold red]")
-                return  # Salimos si la cantidad no es válida
-
-        # Guardamos los cambios en el archivo
-        guardar_productos(productos)
-        console.print(f"[bold green]Producto '{nombre_o_codigo}' modificado correctamente.[/bold green]")
-    else:
-        console.print("[bold red]Producto no encontrado.[/bold red]")
-
-
-
-# Función para eliminar un producto
-def eliminar_producto():
-    productos = cargar_productos()
-    nombre_o_codigo = input("Ingrese el nombre o código del producto a eliminar: ")
-
-    producto = buscar_producto(nombre_o_codigo)
-
-    if producto:
-        productos.remove(producto)
-        guardar_productos(productos)
-        console.print(f"[bold green]Producto '{nombre_o_codigo}' eliminado con éxito.[/bold green]")
-    else:
-        console.print("[bold red]Producto no encontrado.[/bold red]")
-
-# Función para modificar datos del administrador
-def modificar_datos_administrador():
-    administrador = cargar_datos_administrador()
-    console.print(Panel("[bold cyan]--- Modificar Datos del Administrador ---[/bold cyan]", expand=False))
-
-    nuevo_nombre = input("Ingrese el nuevo nombre (o presione Enter para no cambiar): ")
-    nuevo_contrasena = input("Ingrese la nueva contraseña (o presione Enter para no cambiar): ")
-
-    if nuevo_nombre:
-        administrador["nombre"] = nuevo_nombre
-    if nuevo_contrasena:
-        administrador["contrasena"] = nuevo_contrasena
-
-    guardar_datos_administrador(administrador)
-
 
 multiplicar = lambda x, y: x * y
 

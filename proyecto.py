@@ -50,8 +50,38 @@ def iniciar_sesion():
 
 multiplicar = lambda x, y: x * y
 
+def obtener_descuento_recargo():
+    try:
+        with open("config.txt", "r") as archivo_config:
+            configuraciones = {}
+            for linea in archivo_config:
+                clave, valor = linea.strip().split("=")
+                configuraciones[clave] = float(valor)
+            return configuraciones.get("descuento", 0.9), configuraciones.get("recargo", 1.1)
+    except FileNotFoundError:
+        # Valores por defecto
+        return 0.9, 1.1
+
+# Función para modificar valores de descuento y recargo
+def modificar_descuento_recargo():
+    try:
+        nuevo_descuento = float(input("Ingrese el nuevo valor de descuento (por ejemplo, 0.9 para 10%): "))
+        nuevo_recargo = float(input("Ingrese el nuevo valor de recargo (por ejemplo, 1.1 para 10%): "))
+        
+        if nuevo_descuento <= 0 or nuevo_recargo <= 1:
+            console.print("[bold red]Los valores ingresados no son válidos.[/bold red]")
+            return
+        
+        with open("config.txt", "w") as archivo_config:
+            archivo_config.write(f"descuento={nuevo_descuento}\nrecargo={nuevo_recargo}\n")
+        
+        console.print("[bold green]Valores de descuento y recargo actualizados correctamente.[/bold green]")
+    except ValueError:
+        console.print("[bold red]Error: por favor ingrese valores numéricos válidos.[/bold red]")
+
 # Función para cargar ventas 
 def cargar_venta():
+    descuento, recargo = obtener_descuento_recargo()
     fac = 0
 
     console.print(Panel("[bold cyan]-- Factura Iniciada --[/bold cyan]", expand=False))
@@ -98,15 +128,15 @@ def cargar_venta():
         met_pago = input("Seleccione metodo de pago: 1.Credito - 2.Efectivo - 3.Debito \n")
         
         if met_pago == '1':
-            total_factura = multiplicar(total_factura, 1.1)
+            total_factura = multiplicar(total_factura, recargo)
             continuar = False
         elif met_pago == '2':
-            total_factura = multiplicar(total_factura, 0.9)
+            total_factura = multiplicar(total_factura, descuento)
             continuar = False
         elif met_pago == '3':
             continuar = False
         else:
-            print("Valor invalido")
+            console.print("[bold red]Valor inválido, intente de nuevo.[/bold red]")
 
 # Agregar el total al final de la tabla
     tabla.add_row("[bold yellow]Total[/bold yellow]", "", "", f"[bold green]{total_factura:.2f}[/bold green]")  
@@ -156,8 +186,9 @@ def menu():
                 print("7. Eliminar un usuario")
                 print("8. Eliminar un producto")
                 print("9. Modificar un producto")
+                print("10. Modificar un descuentos y recargos")
 
-            print("10. Cerrar sesión")
+            print("-1. Cerrar sesión")
 
             opcion = input("Seleccione una opción: ")
             if opcion == "1":
@@ -189,7 +220,9 @@ def menu():
                 eliminar_producto()
             elif opcion == "9" and usuario_actual == cargar_datos_administrador()["nombre"]:
                 modificar_producto()
-            elif opcion == "10":
+            if opcion == "10" and usuario_actual == cargar_datos_administrador()["nombre"]:
+                modificar_descuento_recargo()
+            elif opcion == "-1":
                 usuario_actual = None
                 console.print("[bold green]Sesión cerrada.[/bold green]")
             else:
